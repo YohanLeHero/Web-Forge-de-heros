@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert, Button, Card, Col, ProgressBar, Row, Spinner } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
-import { mockParties } from '../data/mockParties'
-import { fetchDragonballCharacters } from '../lib/api'
-import { toSimpleCharacters } from '../lib/adapters'
+import { fetchCharacter } from '../lib/api'
+import { normalizeCharacterDetail } from '../lib/adapters'
 
 export default function CharacterDetailsPage() {
   const { id } = useParams()
@@ -17,23 +16,17 @@ export default function CharacterDetailsPage() {
       setLoading(true)
       setError('')
       try {
-        const raw = await fetchDragonballCharacters()
-        const mapped = toSimpleCharacters(raw)
-        const found = mapped.find((c) => c.id === characterId) ?? null
-        setCharacter(found)
+        const raw = await fetchCharacter(characterId)
+        setCharacter(normalizeCharacterDetail(raw))
       } catch (e) {
         setError(e?.message ?? 'Unknown error')
+        setCharacter(null)
       } finally {
         setLoading(false)
       }
     }
-    load()
+    if (Number.isFinite(characterId)) load()
   }, [characterId])
-
-  const parties = useMemo(
-    () => mockParties.filter((p) => p.memberIds.includes(characterId)),
-    [characterId],
-  )
 
   if (loading) return <div className="d-flex justify-content-center py-5"><Spinner animation="border" /></div>
   if (error) return <Alert variant="danger">{error}</Alert>
@@ -59,6 +52,7 @@ export default function CharacterDetailsPage() {
               <h2>{character.name}</h2>
               <div className="mb-2 text-muted">{character.className} • {character.race}</div>
               <div className="mb-2">Level: {character.level}</div>
+              <div className="mb-2 text-muted">HP: {character.healthPoint}</div>
               <div className="mb-3">{character.description || 'No description'}</div>
               <div className="mb-3"><strong>Skills:</strong> {character.skills.join(', ') || 'None'}</div>
               <h5 className="mb-2">Stats</h5>
@@ -71,8 +65,13 @@ export default function CharacterDetailsPage() {
       <Card>
         <Card.Body>
           <h5 className="mb-3">Parties</h5>
-          {parties.length === 0 && <div className="text-muted">No parties</div>}
-          {parties.map((p) => <div key={p.id} className="mb-2"><Link to={`/parties/${p.id}`}>{p.name}</Link></div>)}
+          {character.parties.length === 0 && <div className="text-muted">No parties</div>}
+          {character.parties.map((p) => (
+            <div key={p.id} className="mb-2">
+              <Link to={`/parties/${p.id}`}>{p.name}</Link>
+              <span className="text-muted ms-2">({p.memberCount}/{p.maxSize})</span>
+            </div>
+          ))}
         </Card.Body>
       </Card>
     </>

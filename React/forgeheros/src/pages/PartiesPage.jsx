@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert, Card, Col, Form, Row, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { mockParties } from '../data/mockParties'
-import { fetchDragonballCharacters } from '../lib/api'
-import { toSimpleCharacters } from '../lib/adapters'
+import { fetchParties } from '../lib/api'
+import { normalizePartySummary } from '../lib/adapters'
 
 export default function PartiesPage() {
-  const [characters, setCharacters] = useState([])
+  const [parties, setParties] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [onlyAvailable, setOnlyAvailable] = useState(false)
@@ -16,8 +15,8 @@ export default function PartiesPage() {
       setLoading(true)
       setError('')
       try {
-        const raw = await fetchDragonballCharacters()
-        setCharacters(toSimpleCharacters(raw))
+        const raw = await fetchParties(onlyAvailable ? 'available' : undefined)
+        setParties(raw.map(normalizePartySummary))
       } catch (e) {
         setError(e?.message ?? 'Unknown error')
       } finally {
@@ -25,16 +24,7 @@ export default function PartiesPage() {
       }
     }
     load()
-  }, [])
-
-  const charactersById = useMemo(
-    () => Object.fromEntries(characters.map((c) => [c.id, c])),
-    [characters],
-  )
-
-  const parties = mockParties
-    .map((p) => ({ ...p, members: p.memberIds.map((id) => charactersById[id]).filter(Boolean) }))
-    .filter((p) => (onlyAvailable ? p.members.length < p.maxSize : true))
+  }, [onlyAvailable])
 
   return (
     <>
@@ -50,8 +40,8 @@ export default function PartiesPage() {
                 <Card.Body>
                   <h5>{p.name}</h5>
                   <div className="text-muted mb-2">{p.description}</div>
-                  <div>Members: {p.members.length}/{p.maxSize}</div>
-                  <div>Places left: {p.maxSize - p.members.length}</div>
+                  <div>Members: {p.memberCount}/{p.maxSize}</div>
+                  <div>Places left: {p.placesLeft}</div>
                   <Link to={`/parties/${p.id}`}>Open details</Link>
                 </Card.Body>
               </Card>

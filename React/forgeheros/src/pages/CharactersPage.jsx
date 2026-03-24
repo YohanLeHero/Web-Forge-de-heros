@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Alert, Button, Card, Col, Form, Row, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { fetchDragonballCharacters } from '../lib/api'
-import { toSimpleCharacters } from '../lib/adapters'
+import { fetchCharacters } from '../lib/api'
+import { normalizeCharacterSummaries } from '../lib/adapters'
 
 export default function CharactersPage() {
   const [characters, setCharacters] = useState([])
@@ -19,8 +19,8 @@ export default function CharactersPage() {
       setLoading(true)
       setError('')
       try {
-        const raw = await fetchDragonballCharacters()
-        setCharacters(toSimpleCharacters(raw))
+        const raw = await fetchCharacters()
+        setCharacters(normalizeCharacterSummaries(raw))
       } catch (e) {
         setError(e?.message ?? 'Unknown error')
       } finally {
@@ -30,8 +30,8 @@ export default function CharactersPage() {
     load()
   }, [])
 
-  const raceOptions = ['all', ...new Set(characters.map((c) => c.race))]
-  const classOptions = ['all', ...new Set(characters.map((c) => c.className))]
+  const raceOptions = ['all', ...new Set(characters.map((c) => c.race).filter(Boolean))]
+  const classOptions = ['all', ...new Set(characters.map((c) => c.className).filter(Boolean))]
   const q = name.trim().toLowerCase()
   const sorted = characters
     .filter((c) => (q ? c.name.toLowerCase().includes(q) : true))
