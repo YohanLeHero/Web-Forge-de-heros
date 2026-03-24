@@ -4,8 +4,7 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import { useEffect, useState } from 'react'
 import { Alert, Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap'
 
-const DRAGONBALL_API_BASE_URL =
-  import.meta.env.VITE_DRAGONBALL_API_BASE_URL ?? '/dragonball-api/api'
+const DRAGONBALL_API_BASE_URL = '/dragonball-api/api'
 
 export default function App() {
   const [characters, setCharacters] = useState([])
