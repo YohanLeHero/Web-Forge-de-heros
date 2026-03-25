@@ -13,22 +13,8 @@ class DashboardController extends AbstractDashboardController
 {
     public function index(): Response
     {
-        return parent::index();
-
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // return $this->redirectToRoute('admin_user_index');
-
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirectToRoute('...');
-        // }
-
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
+        // parent::index() shows EasyAdmin’s default “Welcome” page; redirect to real CRUD instead.
+        return $this->redirectToRoute('admin_race_index');
     }
 
     public function configureDashboard(): Dashboard
@@ -40,6 +26,13 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
+        yield MenuItem::section('Data');
+        yield MenuItem::linkTo(RaceCrudController::class, 'Races', 'fa fa-flag');
+        yield MenuItem::linkTo(CharacterClassCrudController::class, 'Classes', 'fa fa-shield');
+        yield MenuItem::linkTo(SkillCrudController::class, 'Skills', 'fa fa-star');
+        yield MenuItem::section('Users');
+        yield MenuItem::linkTo(UserCrudController::class, 'Users', 'fa fa-user');
+        yield MenuItem::section('Content');
+        yield MenuItem::linkTo(CharacterCrudController::class, 'Characters', 'fa fa-users');
     }
 }

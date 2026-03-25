@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Characters{% endblock %}
+
+{% block body %}
+  <div style="max-width: 1000px; margin: 40px auto; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px;">
+      <h1 style="margin: 0;">My Characters</h1>
+      <a href="{{ path('app_characters_new') }}">+ New character</a>
+    </div>
+
+    <form method="get" style="margin: 16px 0; display:flex; gap: 8px;">
+      <input name="q" value="{{ q }}" placeholder="Search by name" style="flex:1; padding: 8px;" />
+      <button type="submit" style="padding: 8px 12px;">Search</button>
+    </form>
+
+    <form method="get" style="margin: 0 0 16px; display:flex; flex-wrap:wrap; gap: 10px; align-items:flex-end;">
+      <div style="flex: 1; min-width: 220px;">
+        <label style="display:block; font-size: 12px; margin-bottom: 4px;">Race</label>
+        <select name="race" style="width:100%; padding: 8px;">
+          <option value="">All races</option>
+          {% for r in races %}
+            <option value="{{ r.id }}" {% if raceId is not null and raceId == r.id %}selected{% endif %}>{{ r.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 220px;">
+        <label style="display:block; font-size: 12px; margin-bottom: 4px;">Class</label>
+        <select name="class" style="width:100%; padding: 8px;">
+          <option value="">All classes</option>
+          {% for cl in classes %}
+            <option value="{{ cl.id }}" {% if classId is not null and classId == cl.id %}selected{% endif %}>{{ cl.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <button type="submit" style="padding: 8px 12px;">Apply</button>
+      </div>
+      <div>
+        <a href="{{ path('app_characters_index') }}" style="padding: 8px 12px; border: 1px solid #ccc; display:inline-block; text-decoration:none;">Reset</a>
+      </div>
+    </form>
+
+    {% if characters is empty %}
+      <p>No characters yet.</p>
+    {% else %}
+      <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Race</th>
+            <th>Class</th>
+            <th>Level</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for c in characters %}
+          <tr>
+            <td>{{ c.name }}</td>
+            <td>{{ c.race ? c.race.name : '' }}</td>
+            <td>{{ c.characterClass ? c.characterClass.name : '' }}</td>
+            <td>{{ c.level }}</td>
+            <td><a href="{{ path('app_characters_show', {id: c.id}) }}">View</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}
+

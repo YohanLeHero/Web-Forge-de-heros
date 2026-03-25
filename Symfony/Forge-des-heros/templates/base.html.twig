@@ -11,6 +11,27 @@
         {% endblock %}
     </head>
     <body>
+        <div style="border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 20px;">
+            <div style="max-width: 1000px; margin: 0 auto; padding: 0 16px; display:flex; align-items:center; justify-content:space-between; gap: 12px;">
+                <div>
+                    <a href="{{ path('app_home') }}" style="text-decoration:none; color:#111; font-weight:600;">Forge de Héros</a>
+                </div>
+                <div>
+                    {% if app.user %}
+                        <a href="{{ path('app_characters_index') }}" style="margin-right: 10px;">Characters</a>
+                        <a href="{{ path('app_parties_index') }}" style="margin-right: 10px;">Parties</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin') }}" style="margin-right: 10px;">Admin</a>
+                        {% endif %}
+                        <a href="{{ path('app_logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" style="margin-right: 10px;">Login</a>
+                        <a href="{{ path('app_register') }}">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
         {% block body %}{% endblock %}
     </body>
 </html>

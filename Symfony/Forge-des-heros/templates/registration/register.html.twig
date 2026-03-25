@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+  <div style="max-width: 520px; margin: 40px auto; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+    <h1>Register</h1>
+
+    {{ form_start(registrationForm) }}
+      {{ form_row(registrationForm.email) }}
+      {{ form_row(registrationForm.username) }}
+      {{ form_row(registrationForm.plainPassword, { label: 'Password' }) }}
+      <button type="submit" style="padding: 8px 12px;">Create account</button>
+    {{ form_end(registrationForm) }}
+
+    <p style="margin-top: 12px;">
+      Already have an account? <a href="{{ path('app_login') }}">Log in</a>
+    </p>
+  </div>
+{% endblock %}
+

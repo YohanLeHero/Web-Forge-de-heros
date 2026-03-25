@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forge de Héros{% endblock %}
+
+{% block body %}
+  <div style="max-width: 900px; margin: 40px auto; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+    <h1>Forge de Héros</h1>
+    <p>Create and manage role-playing characters.</p>
+
+    {% if app.user %}
+      <p>Signed in as <strong>{{ app.user.userIdentifier }}</strong>.</p>
+      <p>
+        <a href="{{ path('app_logout') }}">Log out</a>
+        {% if is_granted('ROLE_ADMIN') %}
+          · <a href="{{ path('admin') }}">Admin</a>
+        {% endif %}
+      </p>
+    {% else %}
+      <p>
+        <a href="{{ path('app_login') }}">Log in</a> ·
+        <a href="{{ path('app_register') }}">Register</a>
+      </p>
+    {% endif %}
+  </div>
+{% endblock %}
+

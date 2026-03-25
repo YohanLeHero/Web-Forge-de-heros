@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ character.name }}{% endblock %}
+
+{% block body %}
+  <div style="max-width: 900px; margin: 40px auto; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+    <p><a href="{{ path('app_characters_index') }}">← Back</a></p>
+
+    <h1>{{ character.name }}</h1>
+    <p>
+      {{ character.characterClass ? character.characterClass.name : '' }}
+      · {{ character.race ? character.race.name : '' }}
+      · Level {{ character.level }}
+      · HP {{ character.healthPoint }}
+    </p>
+
+    {% if imageBase64 and imageMime %}
+      <img
+        src="data:{{ imageMime }};base64,{{ imageBase64 }}"
+        alt="{{ character.name }}"
+        style="width: 160px; height: 160px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd;"
+      />
+    {% endif %}
+
+    <h3 style="margin-top: 18px;">Stats</h3>
+    <ul>
+      <li>STR: {{ character.strength }}</li>
+      <li>DEX: {{ character.dexterity }}</li>
+      <li>CON: {{ character.constitution }}</li>
+      <li>INT: {{ character.intelligence }}</li>
+      <li>WIS: {{ character.wisdom }}</li>
+      <li>CHA: {{ character.charisma }}</li>
+    </ul>
+
+    <p>
+      <a href="{{ path('app_characters_edit', {id: character.id}) }}">Edit</a>
+    </p>
+
+    <form method="post" action="{{ path('app_characters_delete', {id: character.id}) }}" onsubmit="return confirm('Delete this character?');">
+      <input type="hidden" name="_token" value="{{ csrf_token('delete_character_' ~ character.id) }}">
+      <button type="submit" style="padding: 6px 10px;">Delete</button>
+    </form>
+  </div>
+{% endblock %}
+

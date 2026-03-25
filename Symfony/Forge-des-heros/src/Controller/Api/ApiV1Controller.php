@@ -109,7 +109,9 @@ final class ApiV1Controller extends AbstractController
     #[Route('/parties', name: 'api_v1_parties_list', methods: ['GET'])]
     public function partiesList(Request $request, PartyRepository $partyRepository): JsonResponse
     {
-        $filter = $request->query->get('filter');
+        $filter = strtolower((string) $request->query->get('filter')); // full|available|complet|disponible
+        if ($filter === 'complet') $filter = 'full';
+        if ($filter === 'disponible') $filter = 'available';
         $parties = $partyRepository->findBy([], ['id' => 'ASC']);
 
         $out = [];

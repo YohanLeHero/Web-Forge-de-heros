@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ mode == 'new' ? 'New Character' : 'Edit Character' }}{% endblock %}
+
+{% block body %}
+  <div style="max-width: 720px; margin: 40px auto; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+    <h1>{{ mode == 'new' ? 'New Character' : 'Edit Character' }}</h1>
+
+    {{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
+      {{ form_row(form.name) }}
+      {{ form_row(form.level) }}
+      {{ form_row(form.race) }}
+      {{ form_row(form.characterClass) }}
+      {{ form_row(form.imageFile, { label: 'Avatar (optional)' }) }}
+
+      <h3>Point buy (max 27 points)</h3>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        {{ form_row(form.strength) }}
+        {{ form_row(form.dexterity) }}
+        {{ form_row(form.constitution) }}
+        {{ form_row(form.intelligence) }}
+        {{ form_row(form.wisdom) }}
+        {{ form_row(form.charisma) }}
+      </div>
+
+      <button type="submit" style="margin-top: 12px; padding: 8px 12px;">Save</button>
+      <a href="{{ path('app_characters_index') }}" style="margin-left: 10px;">Cancel</a>
+    {{ form_end(form) }}
+  </div>
+{% endblock %}
+

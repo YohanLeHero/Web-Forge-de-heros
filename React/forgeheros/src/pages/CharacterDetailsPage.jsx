@@ -4,6 +4,13 @@ import { Link, useParams } from 'react-router-dom'
 import { fetchCharacter } from '../lib/api'
 import { normalizeCharacterDetail } from '../lib/adapters'
 
+/** Progress fill for ability scores on a familiar 1–20 scale (not point-buy “extra above 8”). */
+function abilityScoreBarPercent(score) {
+  const n = Number(score)
+  if (!Number.isFinite(n)) return 0
+  return Math.min(100, Math.max(0, ((n - 1) / 19) * 100))
+}
+
 export default function CharacterDetailsPage() {
   const { id } = useParams()
   const characterId = Number(id)
@@ -55,8 +62,14 @@ export default function CharacterDetailsPage() {
               <div className="mb-2 text-muted">HP: {character.healthPoint}</div>
               <div className="mb-3">{character.description || 'No description'}</div>
               <div className="mb-3"><strong>Skills:</strong> {character.skills.join(', ') || 'None'}</div>
-              <h5 className="mb-2">Stats</h5>
-              {stats.map(([label, value]) => <div key={label} className="mb-2">{label} ({value})<ProgressBar now={((value - 8) / 7) * 100} /></div>)}
+              <h5 className="mb-1">Stats</h5>
+              <div className="text-muted small mb-2">Bars use the usual 1–20 ability score scale (not “points above 8”).</div>
+              {stats.map(([label, value]) => (
+                <div key={label} className="mb-2">
+                  {label} ({value})
+                  <ProgressBar now={abilityScoreBarPercent(value)} />
+                </div>
+              ))}
             </Col>
           </Row>
         </Card.Body>

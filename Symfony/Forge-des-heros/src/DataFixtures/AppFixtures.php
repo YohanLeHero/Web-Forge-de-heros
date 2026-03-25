@@ -2,12 +2,9 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Character;
 use App\Entity\CharacterClass;
-use App\Entity\Party;
 use App\Entity\Race;
 use App\Entity\Skill;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -15,48 +12,11 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user->setEmail('demo@forge-heros.local');
-        $user->setPassword('demo');
-        $user->setUsername('demo');
-        $user->setRoles('ROLE_USER');
-        $manager->persist($user);
-
         $races = $this->persistRaces($manager);
         $classes = $this->persistCharacterClasses($manager);
         $skills = $this->persistSkills($manager);
+
         $this->wireClassSkills($classes, $skills);
-
-        $manager->flush();
-
-        $chars = [
-            $this->makeCharacter($user, $races['Human'], $classes['Fighter'], 'Aldric', 5, 16, 14, 15, 10, 12, 8, 11, 45),
-            $this->makeCharacter($user, $races['Elf'], $classes['Mage'], 'Lyralei', 4, 8, 14, 12, 17, 15, 10, 13, 22),
-            $this->makeCharacter($user, $races['Dwarf'], $classes['Cleric'], 'Thorin', 6, 14, 10, 16, 10, 14, 12, 9, 52),
-            $this->makeCharacter($user, $races['Halfling'], $classes['Rogue'], 'Pippa', 3, 8, 17, 12, 13, 12, 10, 14, 18),
-            $this->makeCharacter($user, $races['half-Orc'], $classes['Barbarian'], 'Grok', 7, 18, 12, 16, 8, 10, 8, 9, 68),
-        ];
-
-        foreach ($chars as $c) {
-            $manager->persist($c);
-        }
-
-        $party1 = new Party();
-        $party1->setName('The Vanguard');
-        $party1->setDescription('Front-line explorers of the northern roads.');
-        $party1->setMaxSize(5);
-        $party1->setUser($user);
-        $party1->addCharacter($chars[0]);
-        $party1->addCharacter($chars[1]);
-        $manager->persist($party1);
-
-        $party2 = new Party();
-        $party2->setName('Silver Marches');
-        $party2->setDescription('Scholars and scouts — recruiting.');
-        $party2->setMaxSize(4);
-        $party2->setUser($user);
-        $party2->addCharacter($chars[2]);
-        $manager->persist($party2);
 
         $manager->flush();
     }
@@ -67,15 +27,16 @@ class AppFixtures extends Fixture
     private function persistRaces(ObjectManager $manager): array
     {
         $defs = [
-            'Human' => 'Polyvalent and ambitious, humans are the most common race.',
-            'Elf' => 'Graceful and long-lived, elves have a natural affinity for magic.',
-            'Dwarf' => 'Sturdy and resilient, dwarves are skilled warriors and craftsmen.',
-            'Halfling' => 'Small and nimble, halflings are known for their luck and stealth.',
-            'half-Orc' => 'Fierce warriors combining orc strength with human adaptability.',
-            'Gnome' => 'Ingenious and curious, gnomes excel with magic and craft.',
-            'Tiefling' => 'Heirs of infernal bloodlines, tieflings bear a unique mark.',
-            'Half-Elf' => 'Versatile diplomats blending elven and human heritage.',
+            'Humain' => 'Polyvalents et ambitieux, les humains sont la race la plus répandue.',
+            'Elfe' => 'Gracieux et longévifs, les elfes possèdent une affinité naturelle avec la magie.',
+            'Nain' => 'Robustes et tenaces, les nains sont des artisans et guerriers réputés.',
+            'Halfelin' => 'Petits et agiles, les halfelins sont connus pour leur chance et leur discrétion.',
+            'Demi-Orc' => 'Forts et endurants, les demi-orcs allient la puissance des orcs à l\'adaptabilité humaine.',
+            'Gnome' => 'Curieux et inventifs, les gnomes excellent dans les domaines de la magie et de la technologie.',
+            'Tieffelin' => 'Descendants d\'une lignée infernale, les tieffelins portent la marque de leur héritage.',
+            'Demi-Elfe' => 'Héritant du meilleur des deux mondes, les demi-elfes sont diplomates et polyvalents.',
         ];
+
         $out = [];
         foreach ($defs as $name => $desc) {
             $r = new Race();
@@ -94,17 +55,18 @@ class AppFixtures extends Fixture
     private function persistCharacterClasses(ObjectManager $manager): array
     {
         $defs = [
-            'Barbarian' => ['Savage warrior driven by rage.', 12],
-            'Bard' => ['Weaves magic through music and tale.', 8],
-            'Cleric' => ['Divine spellcaster serving the gods.', 8],
-            'Druid' => ["Nature's guardian; shapeshifter.", 8],
-            'Fighter' => ['Master of weapons and tactics.', 10],
-            'Mage' => ['Arcane scholar.', 6],
-            'Paladin' => ['Holy knight blending steel and faith.', 10],
-            'Ranger' => ['Wilderness tracker and hunter.', 10],
-            'Sorcerer' => ['Innate arcane talent.', 6],
-            'Rogue' => ['Stealth, deception, precision.', 8],
+            'Barbare' => ['Guerrier sauvage animé par une rage dévastatrice.', 12],
+            'Barde' => ['Artiste et conteur dont la musique possède un pouvoir magique.', 8],
+            'Clerc' => ['Serviteur divin canalisant la puissance de sa divinité.', 8],
+            'Druide' => ['Gardien de la nature capable de se métamorphoser.', 8],
+            'Guerrier' => ['Maître des armes et des tactiques de combat.', 10],
+            'Mage' => ['Érudit de l\'arcane maîtrisant de puissants sortilèges.', 6],
+            'Paladin' => ['Chevalier sacré combinant prouesse martiale et magie divine.', 10],
+            'Ranger' => ['Chasseur et pisteur expert des terres sauvages.', 10],
+            'Sorcier' => ['Lanceur de sorts dont le pouvoir est inné et instinctif.', 6],
+            'Voleur' => ['Spécialiste de la discrétion, du crochetage et des attaques sournoises.', 8],
         ];
+
         $out = [];
         foreach ($defs as $name => [$desc, $dice]) {
             $c = new CharacterClass();
@@ -124,25 +86,26 @@ class AppFixtures extends Fixture
     private function persistSkills(ObjectManager $manager): array
     {
         $defs = [
-            'Acrobatics' => 'Dexterity',
-            'Arcana' => 'Intelligence',
-            'Athletics' => 'Strength',
-            'Stealth' => 'Dexterity',
-            'Animal Handling' => 'Wisdom',
-            'Sleight of Hand' => 'Dexterity',
-            'History' => 'Intelligence',
-            'Intimidation' => 'Charisma',
-            'Investigation' => 'Intelligence',
-            'Medicine' => 'Wisdom',
-            'Nature' => 'Intelligence',
-            'Perception' => 'Wisdom',
-            'Insight' => 'Wisdom',
-            'Persuasion' => 'Charisma',
-            'Religion' => 'Intelligence',
-            'Performance' => 'Charisma',
-            'Survival' => 'Wisdom',
-            'Deception' => 'Charisma',
+            'Acrobaties' => 'DEX',
+            'Arcanes' => 'INT',
+            'Athlétisme' => 'STR',
+            'Discrétion' => 'DEX',
+            'Dressage' => 'WIS',
+            'Escamotage' => 'DEX',
+            'Histoire' => 'INT',
+            'Intimidation' => 'CHA',
+            'Investigation' => 'INT',
+            'Médecine' => 'WIS',
+            'Nature' => 'INT',
+            'Perception' => 'WIS',
+            'Perspicacité' => 'WIS',
+            'Persuasion' => 'CHA',
+            'Religion' => 'INT',
+            'Représentation' => 'CHA',
+            'Survie' => 'WIS',
+            'Tromperie' => 'CHA',
         ];
+
         $out = [];
         foreach ($defs as $name => $ability) {
             $s = new Skill();
@@ -157,58 +120,29 @@ class AppFixtures extends Fixture
 
     /**
      * @param array<string, CharacterClass> $classes
-     * @param array<string, Skill>         $skills
+     * @param array<string, Skill> $skills
      */
     private function wireClassSkills(array $classes, array $skills): void
     {
+        // 2 à 4 compétences par classe (choix libres).
         $map = [
-            'Barbarian' => ['Athletics', 'Intimidation'],
-            'Bard' => ['Performance', 'Persuasion', 'Deception'],
-            'Cleric' => ['Religion', 'Medicine', 'Insight'],
-            'Druid' => ['Nature', 'Survival', 'Animal Handling'],
-            'Fighter' => ['Athletics', 'Perception'],
-            'Mage' => ['Arcana', 'History', 'Investigation'],
+            'Barbare' => ['Athlétisme', 'Intimidation', 'Survie'],
+            'Barde' => ['Représentation', 'Persuasion', 'Tromperie'],
+            'Clerc' => ['Religion', 'Médecine', 'Perspicacité'],
+            'Druide' => ['Nature', 'Dressage', 'Survie'],
+            'Guerrier' => ['Athlétisme', 'Perception', 'Perspicacité'],
+            'Mage' => ['Arcanes', 'Histoire', 'Investigation'],
             'Paladin' => ['Religion', 'Persuasion', 'Intimidation'],
-            'Ranger' => ['Survival', 'Perception', 'Animal Handling'],
-            'Sorcerer' => ['Arcana', 'Deception'],
-            'Rogue' => ['Stealth', 'Sleight of Hand', 'Acrobatics'],
+            'Ranger' => ['Survie', 'Perception', 'Nature'],
+            'Sorcier' => ['Arcanes', 'Tromperie'],
+            'Voleur' => ['Discrétion', 'Escamotage', 'Acrobaties'],
         ];
+
         foreach ($map as $className => $skillNames) {
             foreach ($skillNames as $sn) {
                 $classes[$className]->addSkill($skills[$sn]);
             }
         }
     }
-
-    private function makeCharacter(
-        User $user,
-        Race $race,
-        CharacterClass $class,
-        string $name,
-        int $level,
-        int $str,
-        int $dex,
-        int $con,
-        int $int,
-        int $wis,
-        int $cha,
-        int $hp,
-    ): Character {
-        $c = new Character();
-        $c->setUser($user);
-        $c->setRace($race);
-        $c->setCharacterClass($class);
-        $c->setName($name);
-        $c->setLevel($level);
-        $c->setStrength($str);
-        $c->setDexterity($dex);
-        $c->setConstitution($con);
-        $c->setIntelligence($int);
-        $c->setWisdom($wis);
-        $c->setCharisma($cha);
-        $c->setHealthPoint($hp);
-        $c->setImage(null);
-
-        return $c;
-    }
 }
+

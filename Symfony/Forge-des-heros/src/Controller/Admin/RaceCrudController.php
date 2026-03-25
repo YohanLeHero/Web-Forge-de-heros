@@ -2,17 +2,17 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Character;
+use App\Entity\Race;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-final class CharacterCrudController extends AbstractCrudController
+final class RaceCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Character::class;
+        return Race::class;
     }
 
     public function configureFields(string $pageName): iterable
@@ -20,7 +20,8 @@ final class CharacterCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('name'),
-            AssociationField::new('User')->setLabel('Owner')->onlyOnIndex(),
+            TextareaField::new('description')->hideOnIndex(),
         ];
     }
 }
+

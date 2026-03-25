@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Parties{% endblock %}
+
+{% block body %}
+  <div style="max-width: 1000px; margin: 40px auto; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px;">
+      <h1 style="margin: 0;">Parties</h1>
+      <a href="{{ path('app_parties_new') }}">+ New party</a>
+    </div>
+
+    <p style="margin-top: 12px;">
+      Filter:
+      <a href="{{ path('app_parties_index') }}">All</a> ·
+      <a href="{{ path('app_parties_index', {filter: 'available'}) }}">With open spots</a> ·
+      <a href="{{ path('app_parties_index', {filter: 'full'}) }}">Full</a>
+    </p>
+
+    {% if parties is empty %}
+      <p>No parties.</p>
+    {% else %}
+      <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Members</th>
+            <th>Places left</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in parties %}
+            {% set p = row.party %}
+            {% set count = row.count %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ count }}/{{ p.maxSize }}</td>
+              <td>{{ p.maxSize - count }}</td>
+              <td><a href="{{ path('app_parties_show', {id: p.id}) }}">View</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}
+
