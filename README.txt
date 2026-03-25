@@ -4,7 +4,6 @@ Symfony backend + React (Vite) frontend.
      composer install
      php bin/console doctrine:migrations:migrate --no-interaction
      php bin/console doctrine:fixtures:load
-     yes to purge the base
      composer run serve
      → http://127.0.0.1:8000
 
