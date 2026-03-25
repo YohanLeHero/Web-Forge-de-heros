@@ -1,0 +1,172 @@
+/**
+ * Forge / dark-fantasy UI layer (CSS variables + Bootstrap overrides).
+ * Palette inspired by common dark-fantasy + ember/gold accent schemes (e.g. colormagic / FantaCSS-style RPG UIs).
+ */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap');
+
+.forge-app {
+  --forge-ink: #0c0a10;
+  --forge-surface: #16121f;
+  --forge-surface-2: #1e1a2a;
+  --forge-border: rgba(201, 162, 39, 0.22);
+  --forge-gold: #c9a227;
+  --forge-gold-dim: #8a7020;
+  --forge-ember: #e0782e;
+  --forge-text: #e4dce8;
+  --forge-muted: #9a8fb0;
+  --forge-glow: rgba(201, 162, 39, 0.14);
+
+  min-height: 100vh;
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  color: var(--forge-text);
+  background-color: var(--forge-ink);
+  background-image:
+    radial-gradient(ellipse 100% 70% at 50% -25%, var(--forge-glow), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 50%, rgba(224, 120, 46, 0.06), transparent 50%),
+    linear-gradient(180deg, #100e16 0%, var(--forge-ink) 45%, #08060c 100%);
+  background-attachment: fixed;
+}
+
+.forge-app h1,
+.forge-app h2,
+.forge-app h3,
+.forge-app h4,
+.forge-app h5,
+.forge-app .navbar-brand {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.forge-navbar {
+  background: linear-gradient(180deg, rgba(22, 18, 31, 0.97), rgba(12, 10, 16, 0.94)) !important;
+  border-bottom: 1px solid var(--forge-border);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+}
+
+.forge-navbar .navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #f5efe6 !important;
+  text-shadow: 0 0 24px rgba(201, 162, 39, 0.35);
+}
+
+.forge-navbar .nav-link {
+  color: var(--forge-muted) !important;
+  font-weight: 500;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.forge-navbar .nav-link:hover,
+.forge-navbar .nav-link:focus {
+  color: var(--forge-text) !important;
+}
+
+.forge-navbar .nav-link.active {
+  color: var(--forge-gold) !important;
+  text-shadow: 0 0 12px rgba(201, 162, 39, 0.4);
+}
+
+.forge-main {
+  text-align: start;
+}
+
+.forge-app .card {
+  --bs-card-bg: rgba(22, 18, 31, 0.88);
+  --bs-card-border-color: var(--forge-border);
+  border-radius: 14px;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.forge-app .card-body {
+  color: var(--forge-text);
+}
+
+.forge-app .text-muted {
+  color: var(--forge-muted) !important;
+}
+
+.forge-app .btn-primary {
+  --bs-btn-bg: var(--forge-gold);
+  --bs-btn-border-color: rgba(201, 162, 39, 0.55);
+  --bs-btn-hover-bg: #ddb22e;
+  --bs-btn-hover-border-color: var(--forge-gold);
+  --bs-btn-active-bg: var(--forge-gold-dim);
+  --bs-btn-active-border-color: var(--forge-gold);
+  --bs-btn-color: #1a1408;
+  --bs-btn-hover-color: #1a1408;
+  --bs-btn-active-color: #fff;
+  font-weight: 600;
+}
+
+.forge-app .btn-outline-secondary {
+  --bs-btn-color: var(--forge-text);
+  --bs-btn-border-color: rgba(201, 162, 39, 0.35);
+  --bs-btn-hover-bg: rgba(201, 162, 39, 0.12);
+  --bs-btn-hover-border-color: var(--forge-gold);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: rgba(201, 162, 39, 0.2);
+  --bs-btn-active-border-color: var(--forge-gold);
+}
+
+.forge-app .form-control,
+.forge-app .form-select {
+  background-color: rgba(14, 12, 20, 0.9);
+  border-color: rgba(154, 143, 176, 0.35);
+  color: var(--forge-text);
+}
+
+.forge-app .form-control:focus,
+.forge-app .form-select:focus {
+  border-color: var(--forge-gold);
+  box-shadow: 0 0 0 0.2rem rgba(201, 162, 39, 0.2);
+  background-color: rgba(14, 12, 20, 0.95);
+  color: var(--forge-text);
+}
+
+.forge-app .progress {
+  height: 0.55rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.forge-app .progress-bar {
+  background: linear-gradient(90deg, #6b3a1a, var(--forge-gold), var(--forge-ember));
+  box-shadow: 0 0 12px rgba(224, 120, 46, 0.35);
+}
+
+.forge-app a:not(.btn):not(.nav-link):not(.navbar-brand) {
+  color: #e8b86d;
+  text-decoration-color: rgba(232, 184, 109, 0.4);
+}
+
+.forge-app a:not(.btn):not(.nav-link):not(.navbar-brand):hover {
+  color: #ffe4b8;
+}
+
+.forge-app .alert-danger {
+  background: rgba(80, 20, 30, 0.55);
+  border-color: rgba(220, 80, 90, 0.45);
+  color: #ffc9c9;
+}
+
+.forge-app .alert-warning {
+  background: rgba(80, 55, 20, 0.5);
+  border-color: rgba(201, 162, 39, 0.4);
+  color: #ffe8c0;
+}
+
+.forge-app .spinner-border {
+  color: var(--forge-gold);
+}
+
+.forge-app .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--forge-text);
+  --bs-table-border-color: rgba(154, 143, 176, 0.2);
+}

@@ -1,16 +1,15 @@
 import './App.css'
-import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import { Container, Nav, Navbar } from 'react-bootstrap'
 import { NavLink, Outlet } from 'react-router-dom'
 
 export default function App() {
   return (
-    <>
-      <Navbar bg="dark" variant="dark" expand="md">
+    <div className="forge-app">
+      <Navbar className="forge-navbar" variant="dark" expand="md">
         <Container>
           <Navbar.Brand as={NavLink} to="/">
-            Forge de Heros
+            Forge des Héros
           </Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link as={NavLink} to="/characters">
@@ -23,10 +22,10 @@ export default function App() {
         </Container>
       </Navbar>
 
-      <Container className="py-4">
+      <Container className="py-4 forge-main">
         <Outlet />
       </Container>
-    </>
+    </div>
   )
 }
 
